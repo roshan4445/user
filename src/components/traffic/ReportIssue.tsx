@@ -27,11 +27,11 @@ import {
 import { AlertTriangle, Send } from 'lucide-react';
 
 const reportSchema = z.object({
-  issueType: z.string().min(1, 'Please select an issue type'),
-  location: z.string().min(5, 'Please provide a specific location'),
-  description: z.string().min(10, 'Please provide more details'),
-  contactName: z.string().min(2, 'Please provide your name'),
-  contactPhone: z.string().min(10, 'Please provide a valid phone number'),
+  Issue_Type: z.string().min(1, 'Please select an issue type'),
+  Location: z.string().min(5, 'Please provide a specific location'),
+  Description: z.string().min(10, 'Please provide more details'),
+  Your_Name: z.string().min(2, 'Please provide your name'),
+  Phone_Number: z.string().min(10, 'Please provide a valid phone number'),
 });
 
 type ReportFormData = z.infer<typeof reportSchema>;
@@ -52,29 +52,45 @@ export function ReportIssue() {
   const form = useForm<ReportFormData>({
     resolver: zodResolver(reportSchema),
     defaultValues: {
-      issueType: '',
-      location: '',
-      description: '',
-      contactName: '',
-      contactPhone: '',
+      Issue_Type: '',
+      Location: '',
+      Description: '',
+      Your_Name: '',
+      Phone_Number: '',
     },
   });
 
   const onSubmit = async (data: ReportFormData) => {
-    setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const reportId = `RPT${Date.now().toString().slice(-6)}`;
-    
-    toast.success(`Issue reported successfully! Reference ID: ${reportId}`, {
+  setIsSubmitting(true);
+
+  try {
+    const response = await fetch('http://localhost:3000/traffic_report', {  // ⬅ Replace with your actual backend URL
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to submit report');
+    }
+
+    const result = await response.json();
+
+    toast.success(`Issue reported successfully! Reference ID: ${result.reportId || 'N/A'}`, {
       description: 'We will investigate and update you within 24 hours.',
     });
-    
+
     form.reset();
+  } catch (error) {
+    console.error(error);
+    toast.error('An error occurred while submitting your report. Please try again.');
+  } finally {
     setIsSubmitting(false);
-  };
+  }
+};
+
 
   return (
     <motion.div
@@ -94,7 +110,7 @@ export function ReportIssue() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="issueType"
+                name="Issue_Type"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Issue Type *</FormLabel>
@@ -119,7 +135,7 @@ export function ReportIssue() {
 
               <FormField
                 control={form.control}
-                name="location"
+                name="Location"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Location *</FormLabel>
@@ -133,7 +149,7 @@ export function ReportIssue() {
 
               <FormField
                 control={form.control}
-                name="description"
+                name="Description"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Description *</FormLabel>
@@ -151,7 +167,7 @@ export function ReportIssue() {
 
               <FormField
                 control={form.control}
-                name="contactName"
+                name="Your_Name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Your Name *</FormLabel>
@@ -165,7 +181,7 @@ export function ReportIssue() {
 
               <FormField
                 control={form.control}
-                name="contactPhone"
+                name="Phone_Number"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Phone Number *</FormLabel>

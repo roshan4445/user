@@ -1,6 +1,6 @@
 
 import { useState, ChangeEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 interface SuccessMessage {
@@ -8,10 +8,15 @@ interface SuccessMessage {
 }
 
 const LoginPage = () => {
+  const navigate = useNavigate()
+  const token = Cookies.get("authToken")
+  if(token!=undefined){
+    return <Navigate to="/" replace />
+  }
   const [aadhar, setAadhar] = useState<string>("");
   const [upas, setUpas] = useState<string>("");
   const [success, setSuccess] = useState<SuccessMessage | null>(null);
-  const navigate = useNavigate()
+  
   const sub = async (): Promise<void> => {
     const url = "http://localhost:3000/auth_user";
     const postData = {
@@ -65,14 +70,14 @@ const LoginPage = () => {
             placeholder="Enter Aadhar Number"
             value={aadhar}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setAadhar(e.target.value)}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="w-full bg-white px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
           />
           <input
             type="password"
             placeholder="Enter Password"
             value={upas}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setUpas(e.target.value)}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="w-full bg-white px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
           />
           <button
             onClick={sub}

@@ -1,5 +1,6 @@
-// import { useState } from 'react';
-// import { Link, useLocation } from 'react-router-dom';
+
+// import { useState,useEffect } from 'react';
+// import { Link, useLocation, useNavigate, Navigate } from 'react-router-dom'; // ✅ Added useNavigate
 // import { motion } from 'framer-motion';
 // import { Menu, X, Home, FileText, Gift, MapPin, Users } from 'lucide-react';
 // import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@
 //   SheetContent,
 //   SheetTrigger,
 // } from '@/components/ui/sheet';
+// import Cookies from "js-cookie"; // ✅ Added js-cookie
 
 // const navigation = [
 //   { name: 'Home', href: '/', icon: Home },
@@ -19,8 +21,21 @@
 // ];
 
 // export function Header() {
+//   const token = Cookies.get("authToken")
 //   const [isOpen, setIsOpen] = useState(false);
 //   const location = useLocation();
+//   const navigate = useNavigate(); // ✅ useNavigate hook
+//   const [isLoggedIn, setisLoggedIn] = useState(token!=undefined)
+//   // ✅ Logout function
+//   useEffect(() => {
+//   const currentToken = Cookies.get("authToken");
+//   setisLoggedIn(currentToken !== undefined);
+// }, []);
+//   const handleLogout = () => {
+//     Cookies.remove("authToken");
+//     setisLoggedIn(false);
+//     navigate("/login")
+//   };
 
 //   return (
 //     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -70,6 +85,11 @@
 //                 </Link>
 //               );
 //             })}
+//             {/* ✅ Logout Button (Desktop) */}
+//             {isLoggedIn ? <Button onClick={handleLogout} variant="outline" size="sm" className="ml-4">
+//                 Logout
+//             </Button> : "" }
+            
 //           </div>
 
 //           {/* Theme Toggle & Mobile Menu */}
@@ -107,6 +127,18 @@
 //                     );
 //                   })}
 //                 </nav>
+
+//                 {/* ✅ Logout Button (Mobile) */}
+//                 <Button
+//                   onClick={() => {
+//                     setIsOpen(false);
+//                     handleLogout();
+//                   }}
+//                   variant="destructive"
+//                   className="w-full mt-6"
+//                 >
+//                   Logout
+//                 </Button>
 //               </SheetContent>
 //             </Sheet>
 //           </div>
@@ -116,17 +148,13 @@
 //   );
 // }
 import { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom'; // ✅ Added useNavigate
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Menu, X, Home, FileText, Gift, MapPin, Users } from 'lucide-react';
+import { Menu, Home, FileText, Gift, MapPin, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import Cookies from "js-cookie"; // ✅ Added js-cookie
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import Cookies from "js-cookie";
 
 const navigation = [
   { name: 'Home', href: '/', icon: Home },
@@ -137,13 +165,15 @@ const navigation = [
 ];
 
 export function Header() {
+  const token = Cookies.get("authToken");
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!token);
   const location = useLocation();
-  const navigate = useNavigate(); // ✅ useNavigate hook
+  const navigate = useNavigate();
 
-  // ✅ Logout function
   const handleLogout = () => {
     Cookies.remove("authToken");
+    setIsLoggedIn(false);
     navigate("/login");
   };
 
@@ -151,7 +181,6 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <motion.div
               initial={{ rotate: 0 }}
@@ -166,7 +195,6 @@ export function Header() {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-1">
             {navigation.map((item) => {
               const isActive = location.pathname === item.href;
@@ -195,17 +223,15 @@ export function Header() {
                 </Link>
               );
             })}
-            {/* ✅ Logout Button (Desktop) */}
-            <Button onClick={handleLogout} variant="outline" size="sm" className="ml-4">
-              Logout
-            </Button>
+            {isLoggedIn && (
+              <Button onClick={handleLogout} variant="outline" size="sm" className="ml-4">
+                Logout
+              </Button>
+            )}
           </div>
 
-          {/* Theme Toggle & Mobile Menu */}
           <div className="flex items-center space-x-2">
             <ThemeToggle />
-            
-            {/* Mobile menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild className="md:hidden">
                 <Button variant="ghost" size="icon">
@@ -236,18 +262,18 @@ export function Header() {
                     );
                   })}
                 </nav>
-
-                {/* ✅ Logout Button (Mobile) */}
-                <Button
-                  onClick={() => {
-                    setIsOpen(false);
-                    handleLogout();
-                  }}
-                  variant="destructive"
-                  className="w-full mt-6"
-                >
-                  Logout
-                </Button>
+                {isLoggedIn && (
+                  <Button
+                    onClick={() => {
+                      setIsOpen(false);
+                      handleLogout();
+                    }}
+                    variant="destructive"
+                    className="w-full mt-6"
+                  >
+                    Logout
+                  </Button>
+                )}
               </SheetContent>
             </Sheet>
           </div>

@@ -10,7 +10,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const token = Cookies.get("authToken");
 
   if (!token) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace:false />;
   }
 
   return <>{children}</>;

@@ -12,7 +12,6 @@ interface UserProfile {
   age: string;
   income: string;
   gender: string;
-  state: string;
 }
 
 const mockEligibleSchemes = [
@@ -27,7 +26,6 @@ export function EligibilityChecker() {
     age: '',
     income: '',
     gender: '',
-    state: '',
   });
   const [eligibleSchemes, setEligibleSchemes] = useState<string[]>([]);
   const [isChecking, setIsChecking] = useState(false);
@@ -93,22 +91,6 @@ export function EligibilityChecker() {
                   <SelectItem value="male">Male</SelectItem>
                   <SelectItem value="female">Female</SelectItem>
                   <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label htmlFor="state">State</Label>
-              <Select onValueChange={(value) => setProfile(prev => ({ ...prev, state: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select state" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="delhi">Delhi</SelectItem>
-                  <SelectItem value="mumbai">Mumbai</SelectItem>
-                  <SelectItem value="bangalore">Bangalore</SelectItem>
-                  <SelectItem value="chennai">Chennai</SelectItem>
-                  <SelectItem value="kolkata">Kolkata</SelectItem>
                 </SelectContent>
               </Select>
             </div>

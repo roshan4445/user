@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+
 import {
   Select,
   SelectContent,
@@ -24,7 +24,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Send, User, MapPin, Phone, Mail } from 'lucide-react';
+import { Send, User} from 'lucide-react';
 
 const complaintSchema = z.object({
   Full_Name: z.string().min(2, 'Full name must be at least 2 characters'),
@@ -151,14 +151,14 @@ const onSubmit = async (data: ComplaintFormData) => {
   }
 };
 
-const mandalsAndDistricts = [
-  "Adilabad", "Nirmal", "Mancherial", "Kumram Bheem",
-  "Karimnagar", "Rajanna Sircilla", "Jagtial", "Peddapalli",
-  "Warangal Urban", "Warangal Rural", "Hanamkonda", "Mahabubabad",
-  "Khammam", "Kothagudem", "Nalgonda", "Suryapet",
-  "Medchal–Malkajgiri", "Hyderabad", "Rangareddy", "Vikarabad",
-  "Mahabubnagar", "Gadwal", "Wanaparthy", "Nagarkurnool",
-];
+// const mandalsAndDistricts = [
+//   "Adilabad", "Nirmal", "Mancherial", "Kumram Bheem",
+//   "Karimnagar", "Rajanna Sircilla", "Jagtial", "Peddapalli",
+//   "Warangal Urban", "Warangal Rural", "Hanamkonda", "Mahabubabad",
+//   "Khammam", "Kothagudem", "Nalgonda", "Suryapet",
+//   "Medchal–Malkajgiri", "Hyderabad", "Rangareddy", "Vikarabad",
+//   "Mahabubnagar", "Gadwal", "Wanaparthy", "Nagarkurnool",
+// ];
 
 
 
